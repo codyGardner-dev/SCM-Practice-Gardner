@@ -46,3 +46,22 @@ void *consumer(void* param){
 	sem_post(&empty);
 	return NULL;
 }
+
+int main(){
+	int i;
+	sem_init(&empty,0,1);
+	sem_init(&full, 0,1);
+	sem_init(&mutex,0,1);
+	for(i = 0; i < PRO_NO; i++){
+		pthread_create(&producerThreads[i], NULL, consumer, NULL);
+	}
+	for(i = 0; i < PRO_NO; i++){
+		pthread_create(&consumerThreads[i], NULL, producer, NULL);
+	}
+	for(i = 0; i < PRO_NO; i++){
+		pthread_join(producerThreads[i],NULL);
+	}
+	for(i = 0; i < PRO_NO; i++){
+		pthread_join(consumerThreads[i],NULL);
+	}
+}
